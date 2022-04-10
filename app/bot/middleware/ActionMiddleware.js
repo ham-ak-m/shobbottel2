@@ -2,14 +2,15 @@ const {
   productListButton,
   productDetaiButtons, MAIN_BUTTON_TEXT
 } = require("../utils/ButtonManager");
-const { PRODUCT_LIST_MESSAGE, PRODUCT_NOT_FOUND_MESSAGE, getProductDetailMessage } = require("../utils/MessageHandler");
+const { PRODUCT_LIST_MESSAGE, PRODUCT_NOT_FOUND_MESSAGE, getProductDetailMessage, SEARCH_MESSAGE } = require("../utils/MessageHandler");
 const productList = require("../data/product.json");
 const { keyboardEventListener } = require('./KeyboardMiddleware');
 
 const ActionMap = {
   CAT: /^CAT_\w+/,
   PRODUCT: /^PRODUCT_\w+/,
-  BACK: /^BACK_\w+/
+  BACK: /^BACK_\w+/,
+  SEARCH: /^SEARCH/
 }
 
 module.exports = (ctx, next) => {
@@ -53,6 +54,10 @@ const EventListener = {
         EventListener.CAT(ctx, [`CAT_${cat}`]);
         break;
     }
+  },
+  SEARCH: (ctx) => {
+    ctx.session.state = "search";
+    ctx.reply(SEARCH_MESSAGE);
   }
 
 };

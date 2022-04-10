@@ -37,7 +37,7 @@ const categoryListButton = (data) => {
             callback_data: `CAT_${item.id}`,
           }))
         ),
-        [{ text: "جستجو", callback_data: "search" }],
+        [{ text: "جستجو", callback_data: "SEARCH" }],
       ],
     },
   };
