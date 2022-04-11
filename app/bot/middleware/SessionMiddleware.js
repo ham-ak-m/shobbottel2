@@ -1,13 +1,16 @@
 const {
   productListButton,
-  productDetaiButtons, MAIN_BUTTON_TEXT
 } = require("../utils/ButtonManager");
-const { PRODUCT_LIST_MESSAGE, PRODUCT_NOT_FOUND_MESSAGE, getProductDetailMessage, SEARCH_MESSAGE } = require("../utils/MessageHandler");
+const { COMMENT_SECOND_MESSAGE, adminCommentMessage, COMMENT_THIRD_MESSAGE } = require("../utils/MessageHandler");
 const productList = require("../data/product.json");
-const { keyboardEventListener } = require('./KeyboardMiddleware');
+const config = require("config");
+
+
 
 const STATE_LIST = {
-  SEARCH: "search"
+  SEARCH: "search",
+  COMMENT_TYPE: "commentType",
+  COMMENT_ENTER: "commentEnter"
 }
 
 module.exports = (ctx, next) => {
@@ -30,6 +33,25 @@ const EventListener = {
 
 
     } else next();
+  },
+  [STATE_LIST.COMMENT_TYPE]: (ctx, next) => {
+    ctx.session.state = undefined;
+    if (ctx.update.callback_query) {
+      const data = ctx.update.callback_query.data;
+      ctx.session.state = STATE_LIST.COMMENT_ENTER;
+      ctx.session.comment = { commentType: data }
+
+      ctx.reply(COMMENT_SECOND_MESSAGE)
+    } else next()
+  },
+  [STATE_LIST.COMMENT_ENTER]: (ctx, next) => {
+    ctx.session.state = undefined;
+    if (ctx.message) {
+      const data = ctx.message.text;
+      ctx.reply(COMMENT_THIRD_MESSAGE);
+      ctx.telegram.sendMessage(config.get("adminId"), adminCommentMessage({ type: ctx.session.comment.commentType, text: data }, ctx.message.from))
+    } else next()
   }
 
 };
+module.exports.STATE_LIST = STATE_LIST;

@@ -58,7 +58,7 @@ const productListButton = (data) => {
     },
   };
 };
-const productDetaiButtons = (product) => {
+const productDetailButtons = (product) => {
   return {
     reply_markup: {
       resize_keyboard: true,
@@ -80,12 +80,29 @@ const productDetaiButtons = (product) => {
       ]
     }
   }
-
 }
+const commentTypeButtons = {
+  reply_markup: {
+    resize_keyboard: true,
+    inline_keyboard: [
+      [{
+        text: "انتقاد",
+        callback_data: `COMMENT_TYPE_CRIT`
+      }], [
+        {
+          text: "پیشنهاد",
+          callback_data: `COMMENT_TYPE_PROP`
+        },
+      ]
+    ]
+  }
+}
+
 module.exports = {
   MAIN_BUTTON_TEXT,
   mainButtons,
   categoryListButton,
   productListButton,
-  productDetaiButtons
+  productDetailButtons,
+  commentTypeButtons
 };

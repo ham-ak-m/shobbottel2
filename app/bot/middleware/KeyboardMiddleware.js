@@ -1,9 +1,12 @@
 const {
   MAIN_BUTTON_TEXT,
   categoryListButton,
+  commentTypeButtons
 } = require("../utils/ButtonManager");
+const { COMMENT_FIRST_MESSAGE } = require('../utils/MessageHandler');
 const { CATEGORY_LIST } = require("../utils/MessageHandler");
 const categoryList = require("../data/category.json");
+const { STATE_LIST } = require('./SessionMiddleware');
 
 
 module.exports = (ctx, next) => {
@@ -20,7 +23,8 @@ const EventListener = {
     ctx.reply(CATEGORY_LIST, categoryListButton(categoryList));
   },
   [MAIN_BUTTON_TEXT.COMMENT]: (ctx) => {
-    ctx.reply("voordon da! 1");
+    ctx.session.state = STATE_LIST.COMMENT_TYPE
+    ctx.reply(COMMENT_FIRST_MESSAGE, commentTypeButtons);
   },
   [MAIN_BUTTON_TEXT.CATALOG]: (ctx) => {
     ctx.reply("voordon da! 2");

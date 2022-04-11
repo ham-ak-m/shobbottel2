@@ -2,7 +2,11 @@
   "sessions": [
     {
       "id": "5114131828:5114131828",
-      "data": {}
+      "data": {
+        "comment": {
+          "commentType": "COMMENT_TYPE_PROP"
+        }
+      }
     }
   ]
 }
