@@ -34,7 +34,7 @@ const categoryListButton = (data) => {
         ...arrayToColumnConverter(data, 2).map((item) =>
           item.map((item) => ({
             text: item.title,
-            callback_data: `CAT_${item.id}`,
+            callback_data: `CAT_${item._id}`,
           }))
         ),
         [{ text: "جستجو", callback_data: "SEARCH" }],
@@ -50,7 +50,7 @@ const productListButton = (data) => {
         ...arrayToColumnConverter(data, 2).map((item) =>
           item.map((item) => ({
             text: item.name,
-            callback_data: `PRODUCT_${item.id}`,
+            callback_data: `PRODUCT_${item._id}`,
           }))
         ),
         [{ text: "بازگشت به قبل", callback_data: "BACK_CAT" }],
@@ -58,7 +58,7 @@ const productListButton = (data) => {
     },
   };
 };
-const productDetailButtons = (product) => {
+const productDetailButtons = (product, caption) => {
   return {
     reply_markup: {
       resize_keyboard: true,
@@ -78,7 +78,7 @@ const productDetailButtons = (product) => {
           }
         ]
       ]
-    }
+    }, caption
   }
 }
 const commentTypeButtons = {

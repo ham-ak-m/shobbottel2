@@ -4,6 +4,7 @@ const {
 const { COMMENT_SECOND_MESSAGE, adminCommentMessage, COMMENT_THIRD_MESSAGE } = require("../utils/MessageHandler");
 const productList = require("../data/product.json");
 const config = require("config");
+const Product = require("../../model/product");
 
 
 
@@ -24,12 +25,16 @@ module.exports = (ctx, next) => {
 
 
 const EventListener = {
-  [STATE_LIST.SEARCH]: (ctx, next) => {
+  [STATE_LIST.SEARCH]: async (ctx, next) => {
     ctx.session.state = undefined;
     if (ctx.message) {
       const text = ctx.message.text;
-      const list = productList.filter(item => item.name.includes(text))
-      ctx.reply(`شما داری دنبال محصول " ${ctx.message.text} "میگردی`, productListButton(list));
+      const products = await Product.find({
+        name: {
+          $regex: text
+        }
+      })
+      ctx.reply(`شما داری دنبال محصول " ${ctx.message.text} "میگردی`, productListButton(products));
 
 
     } else next();

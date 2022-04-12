@@ -6,6 +6,7 @@ const { PRODUCT_LIST_MESSAGE, PRODUCT_NOT_FOUND_MESSAGE, getProductDetailMessage
 const productList = require("../data/product.json");
 const { keyboardEventListener } = require('./KeyboardMiddleware');
 const { STATE_LIST } = require('./SessionMiddleware');
+const Product = require('../../model/product')
 
 const ActionMap = {
   CAT: /^CAT_\w+/,
@@ -31,21 +32,22 @@ module.exports = (ctx, next) => {
 };
 
 const EventListener = {
-  CAT: (ctx, matches) => {
+  CAT: async (ctx, matches) => {
     const cat = matches[0].split("_")[1];
-    productList.filter(item => item.cat == cat)
-    ctx.reply(PRODUCT_LIST_MESSAGE, productListButton(productList.filter(item => item.cat == cat)));
+    const products = await Product.find({ cat: cat })
+    console.log(products);
+    ctx.reply(PRODUCT_LIST_MESSAGE, productListButton(products));
 
   },
   PRODUCT: async (ctx, matches) => {
     const productId = matches[0].split("_")[1];
-    const data = productList.find(item => item.id == productId);
+    const data = await Product.findById(productId)
     if (data) {
       if (data.photo) {
         await ctx.telegram.sendChatAction(ctx.chat.id, "upload_photo")
-        await ctx.replyWithPhoto(data.photo);
-      }
-      ctx.reply(getProductDetailMessage(data), productDetailButtons(data))
+        await ctx.replyWithPhoto(data.photo, productDetailButtons(data, getProductDetailMessage(data)));
+      } else
+        ctx.reply(getProductDetailMessage(data), productDetailButtons(data))
     } else ctx.reply(PRODUCT_NOT_FOUND_MESSAGE)
   },
   BACK: (ctx, matches) => {

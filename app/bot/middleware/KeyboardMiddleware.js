@@ -5,8 +5,8 @@ const {
 } = require("../utils/ButtonManager");
 const { COMMENT_FIRST_MESSAGE } = require('../utils/MessageHandler');
 const { CATEGORY_LIST } = require("../utils/MessageHandler");
-const categoryList = require("../data/category.json");
 const { STATE_LIST } = require('./SessionMiddleware');
+const Category = require('../../model/category');
 
 
 module.exports = (ctx, next) => {
@@ -19,7 +19,8 @@ module.exports = (ctx, next) => {
 };
 
 const EventListener = {
-  [MAIN_BUTTON_TEXT.ONLINE_BUY]: (ctx) => {
+  [MAIN_BUTTON_TEXT.ONLINE_BUY]: async (ctx) => {
+    const categoryList = await Category.find()
     ctx.reply(CATEGORY_LIST, categoryListButton(categoryList));
   },
   [MAIN_BUTTON_TEXT.COMMENT]: (ctx) => {
