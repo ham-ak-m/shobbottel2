@@ -2,7 +2,6 @@ const {
   productListButton,
 } = require("../utils/ButtonManager");
 const { COMMENT_SECOND_MESSAGE, adminCommentMessage, COMMENT_THIRD_MESSAGE } = require("../utils/MessageHandler");
-const productList = require("../data/product.json");
 const config = require("config");
 const Product = require("../../model/product");
 

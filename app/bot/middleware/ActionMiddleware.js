@@ -2,17 +2,18 @@ const {
   productListButton,
   productDetailButtons, MAIN_BUTTON_TEXT
 } = require("../utils/ButtonManager");
-const { PRODUCT_LIST_MESSAGE, PRODUCT_NOT_FOUND_MESSAGE, getProductDetailMessage, SEARCH_MESSAGE } = require("../utils/MessageHandler");
-const productList = require("../data/product.json");
+const { PRODUCT_LIST_MESSAGE, PRODUCT_NOT_FOUND_MESSAGE, getProductDetailMessage, SEARCH_MESSAGE, FAV_ADDED_MESSAGE } = require("../utils/MessageHandler");
 const { keyboardEventListener } = require('./KeyboardMiddleware');
 const { STATE_LIST } = require('./SessionMiddleware');
 const Product = require('../../model/product')
+const User = require('../../model/user');
 
 const ActionMap = {
   CAT: /^CAT_\w+/,
   PRODUCT: /^PRODUCT_\w+/,
   BACK: /^BACK_\w+/,
-  SEARCH: /^SEARCH/
+  SEARCH: /^SEARCH/,
+  FAV: /^FAV_\w+/
 }
 
 module.exports = (ctx, next) => {
@@ -35,7 +36,6 @@ const EventListener = {
   CAT: async (ctx, matches) => {
     const cat = matches[0].split("_")[1];
     const products = await Product.find({ cat: cat })
-    console.log(products);
     ctx.reply(PRODUCT_LIST_MESSAGE, productListButton(products));
 
   },
@@ -65,6 +65,21 @@ const EventListener = {
   SEARCH: (ctx) => {
     ctx.session.state = STATE_LIST.SEARCH;
     ctx.reply(SEARCH_MESSAGE);
+  },
+  FAV: async (ctx, matches) => {
+    const productId = matches[0].split("_")[1];
+    const userTel = ctx.update.callback_query.from;
+    let user = await User.findOne({ telId: userTel.id });
+    if (!user) {
+      user = new User({
+        telId: userTel.id,
+        first_name: userTel.first_name,
+        username: userTel.username,
+        fav: [productId]
+      })
+    } else if (!user.fav.includes(productId)) user.fav.push(productId)
+    await user.save();
+    ctx.reply(FAV_ADDED_MESSAGE);
   }
 
 };

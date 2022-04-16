@@ -2,9 +2,9 @@ const { Telegraf } = require("telegraf");
 const LocalSession = require('telegraf-session-local');
 const { mainButtons } = require("./utils/ButtonManager");
 const keyboardmiddleware = require("./middleware/keyboardmiddleware");
-const KeyboardMiddleware = require("./middleware/KeyboardMiddleware");
 const ActionMiddleware = require("./middleware/ActionMiddleware");
 const SessionMiddleware = require("./middleware/SessionMiddleware");
+const { START_MESSAGE } = require('./utils/MessageHandler');
 
 let bot;
 
@@ -23,5 +23,4 @@ async function startBot() {
     ctx.reply(START_MESSAGE, mainButtons);
   });
 }
-
 module.exports.startBot = startBot;

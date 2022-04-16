@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const { startBot } = require("./bot");
 const Product = require('./model/product');
-const Category = require('./model/category')
-
+const Category = require('./model/category');
 
 class Application {
   constructor() {

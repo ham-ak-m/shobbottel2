@@ -6,6 +6,7 @@ module.exports.SEARCH_MESSAGE = "نام محصولی که میخواهید را 
 module.exports.COMMENT_FIRST_MESSAGE = "لطفا نوع نظر خود را انتخاب کنید";
 module.exports.COMMENT_SECOND_MESSAGE = "هرچه میخواهد دل تنگت بوگو";
 module.exports.COMMENT_THIRD_MESSAGE = "با تشکر ، نظرتان برای بررسی بیشتر به ادمین ارسال شد";
+module.exports.FAV_ADDED_MESSAGE = "محصول فوق به لیست علاقه‌مندی شما افزوده شد"
 
 module.exports.getProductDetailMessage = (product) => `*${product.name}*
 

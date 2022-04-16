@@ -65,11 +65,11 @@ const productDetailButtons = (product, caption) => {
       inline_keyboard: [
         [{
           text: "افزودن به سبد خرید",
-          callback_data: `CART_${product.id}`
+          callback_data: `CART_${product._id}`
         }], [
           {
             text: "افزودن به لیست علاقه‌مندی‌ها",
-            callback_data: `FAV_${product.id}`
+            callback_data: `FAV_${product._id}`
           },
         ], [
           {
