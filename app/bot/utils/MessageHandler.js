@@ -7,14 +7,13 @@ module.exports.COMMENT_FIRST_MESSAGE = "لطفا نوع نظر خود را ان�
 module.exports.COMMENT_SECOND_MESSAGE = "هرچه میخواهد دل تنگت بوگو";
 module.exports.COMMENT_THIRD_MESSAGE = "با تشکر ، نظرتان برای بررسی بیشتر به ادمین ارسال شد";
 module.exports.FAV_ADDED_MESSAGE = "محصول فوق به لیست علاقه‌مندی شما افزوده شد"
-
-module.exports.getProductDetailMessage = (product) => `*${product.name}*
+module.exports.getProductDetailMessage = (product) => `🌸${product.name}🌸
 
 ${product.meta ? product.meta.map(item => (`${item.key}:${item.value}`)).join("\n") : ""}
 
 وضعیت : ${product.exist ? "موجود" : "ناموجود"}
-قیمت مقطوع : ${product.price
-    }
+قیمت مقطوع : ${product.price} تومان
+
 `
 module.exports.adminCommentMessage = (comment, user) => `${comment.type === "COMMENT_TYPE_CRIT" ? "یک انتقاد جدید" : "یک پیشنهاد جدید"}
 

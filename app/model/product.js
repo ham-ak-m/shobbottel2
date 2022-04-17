@@ -4,7 +4,7 @@ const schema = new mongoose.Schema({
     name: String,
     photo: String,
     price: Number,
-    exsist: Boolean,
+    exist: Boolean,
     meta: [],
     cat: {
         type: mongoose.Schema.Types.ObjectId,
