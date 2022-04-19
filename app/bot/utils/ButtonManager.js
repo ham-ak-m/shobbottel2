@@ -6,7 +6,7 @@ const MAIN_BUTTON_TEXT = {
   ONLINE_BUY: "خرید آنلاین",
   MY_BUYS: "خریدهای من",
   CART: "سبد خرید",
-  FAVS: "علاقه مندی‌های من"
+  FAVS: "علاقه مندی‌های من",
 };
 const mainButtons = {
   reply_markup: {
@@ -15,47 +15,47 @@ const mainButtons = {
       [
         { text: MAIN_BUTTON_TEXT.CATALOG },
         { text: MAIN_BUTTON_TEXT.COMMENT },
-        { text: MAIN_BUTTON_TEXT.ONLINE_BUY }
+        { text: MAIN_BUTTON_TEXT.ONLINE_BUY },
       ],
       [
         { text: MAIN_BUTTON_TEXT.MY_BUYS },
         { text: MAIN_BUTTON_TEXT.CART },
-        { text: MAIN_BUTTON_TEXT.FAVS }
-      ]
-    ]
-  }
+        { text: MAIN_BUTTON_TEXT.FAVS },
+      ],
+    ],
+  },
 };
 
-const categoryListButton = data => {
+const categoryListButton = (data) => {
   return {
     reply_markup: {
       resize_keyboard: true,
       inline_keyboard: [
-        ...arrayToColumnConverter(data, 2).map(item =>
-          item.map(item => ({
+        ...arrayToColumnConverter(data, 2).map((item) =>
+          item.map((item) => ({
             text: item.title,
-            callback_data: `CAT_${item._id}`
+            callback_data: `CAT_${item._id}`,
           }))
         ),
-        [{ text: "جستجو", callback_data: "SEARCH" }]
-      ]
-    }
+        [{ text: "جستجو", callback_data: "SEARCH" }],
+      ],
+    },
   };
 };
-const productListButton = data => {
+const productListButton = (data) => {
   return {
     reply_markup: {
       resize_keyboard: true,
       inline_keyboard: [
-        ...arrayToColumnConverter(data, 2).map(item =>
-          item.map(item => ({
+        ...arrayToColumnConverter(data, 2).map((item) =>
+          item.map((item) => ({
             text: item.name,
-            callback_data: `PRODUCT_${item._id}`
+            callback_data: `PRODUCT_${item._id}`,
           }))
         ),
-        [{ text: "بازگشت به قبل", callback_data: "BACK_CAT" }]
-      ]
-    }
+        [{ text: "بازگشت به قبل", callback_data: "BACK_CAT" }],
+      ],
+    },
   };
 };
 const productDetailButtons = (product, caption = "", existInFav) => {
@@ -66,26 +66,26 @@ const productDetailButtons = (product, caption = "", existInFav) => {
         [
           {
             text: "افزودن به سبد خرید",
-            callback_data: `CART_${product._id}`
-          }
+            callback_data: `CART_${product._id}`,
+          },
         ],
         [
           {
             text: existInFav
               ? "حذف از لیست علاقه مندی‌ها ❌"
               : "افزودن به لیست علاقه‌مندی‌ها ✅",
-            callback_data: `FAV_${product._id}`
-          }
+            callback_data: `FAV_${product._id}`,
+          },
         ],
         [
           {
             text: "بازگشت به قبل",
-            callback_data: `BACK_PRODUCT_${product.cat}`
-          }
-        ]
-      ]
+            callback_data: `BACK_PRODUCT_${product.cat}`,
+          },
+        ],
+      ],
     },
-    caption
+    caption,
   };
 };
 const commentTypeButtons = {
@@ -95,17 +95,37 @@ const commentTypeButtons = {
       [
         {
           text: "انتقاد",
-          callback_data: `COMMENT_TYPE_CRIT`
-        }
+          callback_data: `COMMENT_TYPE_CRIT`,
+        },
       ],
       [
         {
           text: "پیشنهاد",
-          callback_data: `COMMENT_TYPE_PROP`
-        }
-      ]
-    ]
-  }
+          callback_data: `COMMENT_TYPE_PROP`,
+        },
+      ],
+    ],
+  },
+};
+
+const sharedUseButtons = {
+  reply_markup: {
+    resize_keyboard: true,
+    inline_keyboard: [
+      [
+        {
+          text: "‌استفاده‌ی تکی",
+          callback_data: `SHARED_USE_FALSE`,
+        },
+      ],
+      [
+        {
+          text: "استفاده‌ی گروهی",
+          callback_data: `SAHRED_USE_TRUE`,
+        },
+      ],
+    ],
+  },
 };
 
 module.exports = {
@@ -114,5 +134,6 @@ module.exports = {
   categoryListButton,
   productListButton,
   productDetailButtons,
-  commentTypeButtons
+  commentTypeButtons,
+  sharedUseButtons,
 };
