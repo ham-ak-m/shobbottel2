@@ -1,18 +1,12 @@
 {
   "sessions": [
     {
-      "id": "",
-      "data": {
-        "comment": {
-          "commentType": "CAT_6255498d699a7f32441e70e1"
-        }
-      }
-    },
-    {
       "id": "5114131828:5114131828",
       "data": {
         "state": "sharedUse",
-        "productId": "6255515ab22c7010b4bad8c8"
+        "stateData": {
+          "productId": "6255515ab22c7010b4bad8c8"
+        }
       }
     }
   ]

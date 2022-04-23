@@ -44,23 +44,23 @@ const EventListener = {
     if (ctx.update.callback_query) {
       const data = ctx.update.callback_query.data;
       ctx.session.state = STATE_LIST.COMMENT_ENTER;
-      ctx.session.comment = { commentType: data };
+      ctx.session.stateData = { commentType: data };
 
       ctx.reply(COMMENT_SECOND_MESSAGE);
     } else next();
   },
   [STATE_LIST.COMMENT_ENTER]: (ctx, next) => {
     ctx.session.state = undefined;
+    const commentType = ctx.session.stateData.commentType;
+    ctx.session.stateData = undefined;
     if (ctx.message) {
       const data = ctx.message.text;
       ctx.reply(COMMENT_THIRD_MESSAGE);
       ctx.telegram.sendMessage(
         config.get("adminId"),
-        adminCommentMessage(
-          { type: ctx.session.comment.commentType, text: data },
-          ctx.message.from
-        )
+        adminCommentMessage({ type: commentType, text: data }, ctx.message.from)
       );
+      ctx.session.stateData = undefined;
     } else next();
   },
 };

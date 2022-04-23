@@ -18,9 +18,11 @@ module.exports = (ctx, next) => {
   if (!ctx.message) return next();
   const text = ctx.message.text;
   if (text)
-    if (Object.values(MAIN_BUTTON_TEXT).includes(text) && EventListener[text])
+    if (Object.values(MAIN_BUTTON_TEXT).includes(text) && EventListener[text]) {
       ctx.session.state = undefined;
-  return EventListener[text](ctx);
+      ctx.session.stateData = undefined;
+      return EventListener[text](ctx);
+    }
   next();
 };
 
@@ -31,7 +33,7 @@ const EventListener = {
   },
   [MAIN_BUTTON_TEXT.COMMENT]: (ctx) => {
     ctx.session.state = STATE_LIST.COMMENT_TYPE;
-    ctx.session.comment = undefined;
+    ctx.session.stateData = undefined;
     ctx.reply(COMMENT_FIRST_MESSAGE, commentTypeButtons);
   },
   [MAIN_BUTTON_TEXT.CATALOG]: (ctx) => {

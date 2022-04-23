@@ -105,7 +105,7 @@ const EventListener = {
   CART: async (ctx, matches) => {
     const productId = matches[0].split("_")[1];
     ctx.session.state = STATE_LIST.SHARED_USE;
-    ctx.session.productId = productId;
+    ctx.session.stateData = { productId };
     ctx.reply(SHARED_USE_MESSAGE, sharedUseButtons);
   },
 };
