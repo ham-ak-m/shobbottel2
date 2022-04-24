@@ -15,6 +15,22 @@ module.exports.FAV_LIST_EMPTY_MESSAGE = "لیست علاقه مندی شما خ�
 module.exports.SHARED_USE_MESSAGE = "نحوه استفاده از آموزش را انتخاب کنید";
 module.exports.PRODUCT_ADDED_TO_CART_MESSAGE = "محصول به سبد خرید اضافه شد";
 module.exports.REMOVED_FROM_CART_MESSAGE = "محصول از سبد شما حذف شد";
+module.exports.CART_EMPTY_MESSAGE = "سبد خرید شما خالیه";
+module.exports.CartListMessage = (cart) => {
+  return `فارش شما شامل اقلام زیر است:
+  
+${cart
+  .map(
+    (item, index) =>
+      `${index + 1}- ${item.name} : ${item.price}تومان  (مخصوص استفاده ${
+        item.shareUse ? "گروهی" : "اتکی"
+      })\n`
+  )
+  .join("")}
+
+  مبلغ قابل پرداخت: ${cart.reduce((acc, item) => acc + item.price, 0)} تومان
+  `;
+};
 
 module.exports.getProductDetailMessage = (product) => `🌸${product.name}🌸
 

@@ -2,12 +2,7 @@
   "sessions": [
     {
       "id": "5114131828:5114131828",
-      "data": {
-        "state": "sharedUse",
-        "stateData": {
-          "productId": "6255515ab22c7010b4bad8c8"
-        }
-      }
+      "data": {}
     }
   ]
 }

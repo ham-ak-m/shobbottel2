@@ -128,6 +128,26 @@ const sharedUseButtons = {
   },
 };
 
+const productAddedToCart = {
+  reply_markup: {
+    resize_keyboard: true,
+    inline_keyboard: [
+      [
+        {
+          text: "افزودن سفارش دیگر",
+          callback_data: `BACK_CAT`,
+        },
+        {
+          text: "مشاهده لیست خرید",
+          callback_data: `CART-LIST`,
+        },
+      ],
+      [{ text: "نهایی کردن خرید", callback_data: `asa` }],
+      [{ text: "بازگشت↪️", callback_data: `BACK_CAT` }],
+    ],
+  },
+};
+
 module.exports = {
   MAIN_BUTTON_TEXT,
   mainButtons,
@@ -136,4 +156,5 @@ module.exports = {
   productDetailButtons,
   commentTypeButtons,
   sharedUseButtons,
+  productAddedToCart,
 };

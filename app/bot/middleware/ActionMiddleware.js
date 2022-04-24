@@ -3,6 +3,7 @@ const {
   productDetailButtons,
   MAIN_BUTTON_TEXT,
   sharedUseButtons,
+  productAddedToCart,
 } = require("../utils/ButtonManager");
 const {
   PRODUCT_LIST_MESSAGE,
@@ -13,6 +14,8 @@ const {
   SHARED_USE_MESSAGE,
   PRODUCT_ADDED_TO_CART_MESSAGE,
   REMOVED_FROM_CART_MESSAGE,
+  CART_EMPTY_MESSAGE,
+  CartListMessage,
 } = require("../utils/MessageHandler");
 const { keyboardEventListener } = require("./KeyboardMiddleware");
 const { STATE_LIST } = require("./SessionMiddleware");
@@ -28,6 +31,7 @@ const ActionMap = {
   FAV: /^FAV_\w+/,
   CART: /^CART_\w+/,
   SHARED_USE: /^SHARED-USE_\w+/,
+  CART_LIST: /^CART-LIST/,
 };
 
 module.exports = (ctx, next) => {
@@ -135,13 +139,25 @@ const EventListener = {
     const userTel = ctx.update.callback_query.from;
     let user = await User.findOne({ telId: userTel.id });
     if (!user) user = await createUser(userTel, false);
-    user.cart.push({
-      product: ctx.session.stateData.productId,
-      shareUse: isShareUse,
-    });
+    if (
+      !user.cart.some((item) => item.product == ctx.session.stateData.productId)
+    )
+      user.cart.push({
+        product: ctx.session.stateData.productId,
+        shareUse: isShareUse,
+      });
     await user.save();
-    await ctx.reply(PRODUCT_ADDED_TO_CART_MESSAGE);
+    await ctx.reply(PRODUCT_ADDED_TO_CART_MESSAGE, productAddedToCart);
     ctx.session.stateData = undefined;
     ctx.session.state = undefined;
+  },
+  CART_LIST: async (ctx) => {
+    const userTel = ctx.update.callback_query.from;
+    let user = await User.findOne({ telId: userTel.id }).populate(
+      "cart.product"
+    );
+    if (!user || user.cart.length === 0) return ctx.reply(CART_EMPTY_MESSAGE);
+
+    ctx.reply(CartListMessage(user.cart.map((item) => item.product)));
   },
 };
