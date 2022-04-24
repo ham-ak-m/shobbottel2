@@ -11,11 +11,14 @@ const {
   SEARCH_MESSAGE,
   FAV_ADDED_MESSAGE,
   SHARED_USE_MESSAGE,
+  PRODUCT_ADDED_TO_CART_MESSAGE,
+  REMOVED_FROM_CART_MESSAGE,
 } = require("../utils/MessageHandler");
 const { keyboardEventListener } = require("./KeyboardMiddleware");
 const { STATE_LIST } = require("./SessionMiddleware");
 const Product = require("../../model/product");
 const User = require("../../model/user");
+const { createUser } = require("../../model/user");
 
 const ActionMap = {
   CAT: /^CAT_\w+/,
@@ -24,6 +27,7 @@ const ActionMap = {
   SEARCH: /^SEARCH/,
   FAV: /^FAV_\w+/,
   CART: /^CART_\w+/,
+  SHARED_USE: /^SHARED-USE_\w+/,
 };
 
 module.exports = (ctx, next) => {
@@ -54,14 +58,20 @@ const EventListener = {
 
     if (data) {
       const existInFav = user?.fav?.includes(productId);
+      const existInCart = user?.cart?.some((item) => item.product == productId);
       if (data.photo) {
         await ctx.telegram.sendChatAction(ctx.chat.id, "upload_photo");
         await ctx.replyWithPhoto(
           data.photo,
-          productDetailButtons(data, getProductDetailMessage(data), existInFav)
+          productDetailButtons(
+            data,
+            getProductDetailMessage(data),
+            existInFav,
+            existInCart
+          )
         );
       } else
-        ctx.reply(getProductDetailMessage(data), getProductDetailMessage(data));
+        ctx.reply(getProductDetailMessage(data), productDetailButtons(data));
     } else ctx.reply(PRODUCT_NOT_FOUND_MESSAGE);
   },
   BACK: (ctx, matches) => {
@@ -85,27 +95,53 @@ const EventListener = {
     const userTel = ctx.update.callback_query.from;
     let user = await User.findOne({ telId: userTel.id });
     if (!user) {
-      user = new User({
-        telId: userTel.id,
-        first_name: userTel.first_name,
-        username: userTel.username,
-        fav: [productId],
-      });
+      user = await createUser(userTel, false);
+      user.fav = [productId];
     } else if (!user.fav.includes(productId)) user.fav.push(productId);
     else user.fav = user.fav.filter((item) => item != productId);
     await user.save();
+    const existInCart = user?.fav?.some((item) => item.product == productId);
     ctx.telegram.editMessageReplyMarkup(
       ctx.update.callback_query.message.chat.id,
       ctx.update.callback_query.message.message_id,
       undefined,
-      productDetailButtons({ _id: productId }, "", user.fav.includes(productId))
-        .reply_markup
+      productDetailButtons(
+        { _id: productId },
+        "",
+        user.fav.includes(productId),
+        existInCart
+      ).reply_markup
     );
   },
   CART: async (ctx, matches) => {
     const productId = matches[0].split("_")[1];
+    const userTel = ctx.update.callback_query.from;
+    let user = await User.findOne({ telId: userTel.id });
+    if (user) {
+      const existInCart = user.cart.some((item) => item.product == productId);
+      if (existInCart) {
+        user.cart = user.cart.filter((item) => item.product != productId);
+        ctx.reply(REMOVED_FROM_CART_MESSAGE);
+        return await user.save();
+      }
+    }
     ctx.session.state = STATE_LIST.SHARED_USE;
     ctx.session.stateData = { productId };
     ctx.reply(SHARED_USE_MESSAGE, sharedUseButtons);
+  },
+  SHARED_USE: async (ctx, matches) => {
+    const shareUse = matches[0].split("_")[1];
+    const isShareUse = shareUse === "TRUE";
+    const userTel = ctx.update.callback_query.from;
+    let user = await User.findOne({ telId: userTel.id });
+    if (!user) user = await createUser(userTel, false);
+    user.cart.push({
+      product: ctx.session.stateData.productId,
+      shareUse: isShareUse,
+    });
+    await user.save();
+    await ctx.reply(PRODUCT_ADDED_TO_CART_MESSAGE);
+    ctx.session.stateData = undefined;
+    ctx.session.state = undefined;
   },
 };

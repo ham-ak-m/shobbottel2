@@ -13,6 +13,8 @@ module.exports.FAV_LIST_MESSAGE =
   " محصولات زیر در لیست علاقه مندیهای شما قرار دارند. در صورت تمایل برای اطلاعات بیشتر و خرید آنها روی هر گزینه کلیک کنید.";
 module.exports.FAV_LIST_EMPTY_MESSAGE = "لیست علاقه مندی شما خالیه";
 module.exports.SHARED_USE_MESSAGE = "نحوه استفاده از آموزش را انتخاب کنید";
+module.exports.PRODUCT_ADDED_TO_CART_MESSAGE = "محصول به سبد خرید اضافه شد";
+module.exports.REMOVED_FROM_CART_MESSAGE = "محصول از سبد شما حذف شد";
 
 module.exports.getProductDetailMessage = (product) => `🌸${product.name}🌸
 

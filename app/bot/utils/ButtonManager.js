@@ -58,28 +58,33 @@ const productListButton = (data) => {
     },
   };
 };
-const productDetailButtons = (product, caption = "", existInFav) => {
+const productDetailButtons = (
+  product,
+  caption = "",
+  existInFav,
+  existInCart
+) => {
   return {
     reply_markup: {
       resize_keyboard: true,
       inline_keyboard: [
         [
           {
-            text: "افزودن به سبد خرید",
+            text: existInCart ? "❌حذف از سبد خرید" : "افزودن به سبد خرید",
             callback_data: `CART_${product._id}`,
           },
         ],
         [
           {
             text: existInFav
-              ? "حذف از لیست علاقه مندی‌ها ❌"
-              : "افزودن به لیست علاقه‌مندی‌ها ✅",
+              ? "❌حذف از لیست علاقمندی ها"
+              : "افزودن به لیست علاقمندی ها",
             callback_data: `FAV_${product._id}`,
           },
         ],
         [
           {
-            text: "بازگشت به قبل",
+            text: "بازگشت↪️",
             callback_data: `BACK_PRODUCT_${product.cat}`,
           },
         ],
@@ -114,16 +119,11 @@ const sharedUseButtons = {
     inline_keyboard: [
       [
         {
-          text: "‌استفاده‌ی تکی",
-          callback_data: `SHARED_USE_FALSE`,
+          text: "استفاده تکی",
+          callback_data: `SHARED-USE_FALSE`,
         },
       ],
-      [
-        {
-          text: "استفاده‌ی گروهی",
-          callback_data: `SAHRED_USE_TRUE`,
-        },
-      ],
+      [{ text: "استفاده گروهی", callback_data: `SHARED-USE_TRUE` }],
     ],
   },
 };
