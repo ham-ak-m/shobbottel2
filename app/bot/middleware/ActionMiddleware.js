@@ -4,6 +4,7 @@ const {
   MAIN_BUTTON_TEXT,
   sharedUseButtons,
   productAddedToCart,
+  cartProductsBtns,
 } = require("../utils/ButtonManager");
 const {
   PRODUCT_LIST_MESSAGE,
@@ -32,6 +33,7 @@ const ActionMap = {
   CART: /^CART_\w+/,
   SHARED_USE: /^SHARED-USE_\w+/,
   CART_LIST: /^CART-LIST/,
+  DELETE_PRODUCT_FROM_CART: /^DELETE-FROM-CART_\w+/,
 };
 
 module.exports = (ctx, next) => {
@@ -157,7 +159,16 @@ const EventListener = {
       "cart.product"
     );
     if (!user || user.cart.length === 0) return ctx.reply(CART_EMPTY_MESSAGE);
-
-    ctx.reply(CartListMessage(user.cart.map((item) => item.product)));
+    const cart = user.cart.map((item) => item.product);
+    ctx.reply(CartListMessage(cart), cartProductsBtns(cart));
+  },
+  DELETE_PRODUCT_FROM_CART: async (ctx, matches) => {
+    const product = matches[0].split("_")[1];
+    const userTel = ctx.update.callback_query.from;
+    let user = await User.findOne({ telId: userTel.id });
+    if (user) {
+      user.cart = user.cart.filter((item) => item.product != product);
+      await user.save();
+    }
   },
 };

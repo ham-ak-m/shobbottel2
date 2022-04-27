@@ -147,7 +147,23 @@ const productAddedToCart = {
     ],
   },
 };
-
+const cartProductsBtns = (data) => {
+  return {
+    reply_markup: {
+      resize_keyboard: true,
+      inline_keyboard: [
+        ...data.map((item) => [
+          {
+            text: `❌ حذف ${item.name}`,
+            callback_data: `DELETE-FROM-CART_${item._id}`,
+          },
+        ]),
+        [{ text: "افزودن سفارش دیگر", callback_data: "BACK_CAT" }],
+        [{ text: "نهایی کردن خرید", callback_data: "BACK_CAT" }],
+      ],
+    },
+  };
+};
 module.exports = {
   MAIN_BUTTON_TEXT,
   mainButtons,
@@ -157,4 +173,5 @@ module.exports = {
   commentTypeButtons,
   sharedUseButtons,
   productAddedToCart,
+  cartProductsBtns,
 };
